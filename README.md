@@ -25,5 +25,13 @@ cp .env.example .env        # rellena los valores
 npm run dev                 # http://localhost:5173
 ```
 
+## Tests
+```bash
+cd backend  && .venv/bin/pytest --cov          # 34 tests, ~97% cobertura
+cd frontend && npm test                          # 35 tests (Vitest + Testing Library)
+cd frontend && npm run coverage                  # con informe de cobertura
+```
+La CI (`.github/workflows/ci.yml`) ejecuta ambos, el typecheck y el build en cada push y pull request.
+
 ## Pendiente
 Alembic (migraciones), RLS en Supabase, asignación de limpiadores desde la UI, agentes de IA, registro de viajeros.

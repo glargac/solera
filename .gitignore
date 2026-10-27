@@ -7,3 +7,6 @@ dist/
 .DS_Store
 .pytest_cache/
 cv/
+coverage/
+.coverage
+htmlcov/

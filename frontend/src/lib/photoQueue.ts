@@ -2,10 +2,10 @@ import { del, get, keys, set } from 'idb-keyval'
 import { api, type CleaningTask } from './api'
 
 // Cola offline: las fotos se guardan en IndexedDB hasta que hay conexión.
-const key = (taskId: string, n: number) => `photo:${taskId}:${n}:${Date.now()}`
+const key = (taskId: string) => `photo:${taskId}:${crypto.randomUUID()}`
 
 export async function queuePhoto(taskId: string, file: File) {
-  await set(key(taskId, 0), { taskId, file })
+  await set(key(taskId), { taskId, file })
   await flushQueue()
 }
 

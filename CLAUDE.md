@@ -4,7 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 - Backend (from `backend/`): `.venv/bin/uvicorn app.main:app --reload`; tests `.venv/bin/pytest`; one test `.venv/bin/pytest tests/test_api.py::test_parse_ical`
-- Frontend (from `frontend/`): `npm run dev`, `npx tsc -b` (typecheck), `npx vite build`
+- Frontend (from `frontend/`): `npm run dev`, tests `npm test` (one file: `npx vitest run src/pages/Login.test.tsx`), coverage `npm run coverage`, `npx tsc -b` (typecheck), `npx vite build`
+
+## Testing notes
+- Backend: `backend/.coveragerc` needs `concurrency = greenlet,thread` or async SQLAlchemy code is reported as uncovered. Outbound HTTP (iCal, Supabase Storage, JWKS) is mocked with `httpx.MockTransport` (see `tests/test_external.py`); `tests/helpers.py` has `make_user/make_property/make_booking`.
+- Frontend: `src/test/setup.ts` mocks `lib/supabase` globally and loads fake-indexeddb; pages are tested by spying on `api` from `lib/api` and rendering with `renderWithProviders` (`src/test/utils.tsx`).
 
 ## Architecture
 - Monorepo: `backend/` FastAPI + SQLModel (async), `frontend/` React + TS + Tailwind 3 PWA. Auth is Supabase: the frontend logs in with supabase-js and sends the access token; `backend/app/core/security.py` validates it against the project JWKS (`SUPABASE_URL/auth/v1/.well-known/jwks.json`, ES256/RS256, keys cached by `kid`) and auto-creates a `User` row (role `host`) on first request.
